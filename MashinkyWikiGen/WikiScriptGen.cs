@@ -141,6 +141,12 @@ namespace MashinkyWikiGen
 
         }
 
+        /// <summary>
+        /// Creates a single-row table for one vehicle with appropriate headers based on vehicle type.
+        /// Generates different table formats for engines, vehicles, airplanes, and wagons.
+        /// </summary>
+        /// <param name="path">The output path where the table file will be saved</param>
+        /// <param name="w">The vehicle to create a table for</param>
         public void CreateSingleTable(string path, VehicleBase w)
         {
             string header = "";
@@ -169,6 +175,12 @@ namespace MashinkyWikiGen
 
         }
         private string wagonHeader = $"\n!Image\n!Name\n!Capacity\n!Purchase{newLine}cost\n!Weight{newLine}(Fully loaded)\n!Unlocked{newLine}at epoch\n!Depot extension{newLine}required?";
+        /// <summary>
+        /// Creates a MediaWiki table row for a wagon vehicle.
+        /// Includes image, name, capacity, purchase cost, weight, epoch, and depot extension requirement.
+        /// </summary>
+        /// <param name="w">The wagon vehicle to create a table row for</param>
+        /// <returns>A MediaWiki-formatted table row string</returns>
         public string CreateWagonTable(VehicleBase w)
         {
             return $"{newRow}{newColumn} {PrintImage(w.Name, 120)}{newColumn} {w.Name}{newLine}{newLine} {PrintIcon(w.Name, 80)}{newColumn} {w.Capacity} {PrintToken(w.Cargo.IconPath, 16, w.Cargo.LinkedPage)} {newColumn} {PrintPurchaseCost(w)}{newColumn} {w.Weight}" +
@@ -176,6 +188,12 @@ namespace MashinkyWikiGen
         }
         private string engineTHeader;
         //private string engineTHeader = $"\n!Image\n!Name\n!Max speed\n!Pull up to\n!Power\n!Weight\n!Length\n!Purchase{newLine}cost\n!Operating{newLine}cost\n!Unlocked{newLine}at epoch\n!Depot extension{newLine}required?";
+        /// <summary>
+        /// Creates a MediaWiki table row for an engine vehicle.
+        /// Includes image, specifications, costs, and electrification requirements.
+        /// </summary>
+        /// <param name="e">The engine to create a table row for</param>
+        /// <returns>A MediaWiki-formatted table row string</returns>
         private string CreateEngineTable(Engine e)
         {
             engineTHeader = $"\n!Image\n!Name\n!Max speed\n!Pull up to\n!Power\n!Weight\n!Length\n!Purchase{newLine}cost\n!{LinkText($"Operating{newLine}cost", resources.LinkOperatingCost)}\n!Depot extension{newLine}required?";
@@ -195,6 +213,12 @@ namespace MashinkyWikiGen
                  $"{newColumn} {PrintBool(e.ReqDepotExtension)}{elColumn}";
         }
         private string vehicleHeader = "";
+        /// <summary>
+        /// Creates a MediaWiki table row for a road vehicle (car).
+        /// Includes image, specifications, capacity, and operating costs.
+        /// </summary>
+        /// <param name="v">The vehicle to create a table row for</param>
+        /// <returns>A MediaWiki-formatted table row string</returns>
         private string CreateVehicleTable(Engine v)
         {
             vehicleHeader = $"\n!Image\n!Name\n!Max speed\n!Power\n!Weight\n!Length\n!Capacity\n!Purchase{newLine}cost\n!{LinkText($"Operating{newLine}cost", resources.LinkOperatingCost)} \n!Unlocked{newLine}at epoch";
@@ -204,6 +228,12 @@ namespace MashinkyWikiGen
         }
 
         private string airplaneHeader = "";
+        /// <summary>
+        /// Creates a MediaWiki table row for an airplane vehicle.
+        /// Includes image, specifications, runway requirements, and flight altitude.
+        /// </summary>
+        /// <param name="airplane">The airplane to create a table row for</param>
+        /// <returns>A MediaWiki-formatted table row string</returns>
         private string CreateVehicleTable(Airplane airplane)
         {
             airplaneHeader = $"\n!Image\n!Name\n!Max speed\n!Power\n!Weight\n!Length\n!Runway{newLine}length\n!Flight{newLine}altitude\n!Capacity\n!Purchase{newLine}cost\n!{LinkText($"Operating{newLine}cost", resources.LinkOperatingCost)} \n!Unlocked{newLine}at epoch";
@@ -212,43 +242,93 @@ namespace MashinkyWikiGen
                 $"";
         }
 
+        /// <summary>
+        /// Creates a MediaWiki image link with specified size.
+        /// Replaces spaces with underscores in the filename.
+        /// </summary>
+        /// <param name="name">The image name</param>
+        /// <param name="size">The image height in pixels</param>
+        /// <returns>A MediaWiki image link with size specification</returns>
         private string PrintImage(string name, int size)
         {
             name = name.Replace(" ", "_");
             return $"[[File:{name}.png|x{size}px]]";
         }
 
+        /// <summary>
+        /// Creates a MediaWiki image link without size specification.
+        /// Replaces spaces with underscores in the filename.
+        /// </summary>
+        /// <param name="name">The image name</param>
+        /// <returns>A MediaWiki image link</returns>
         private string PrintImage(string name)
         {
             name = name.Replace(" ", "_");
             return $"[[File:{name}.png]]";
         }
+        /// <summary>
+        /// Creates a MediaWiki token/icon link.
+        /// </summary>
+        /// <param name="path">The path to the token icon file</param>
+        /// <returns>A MediaWiki file link</returns>
         private string PrintToken(string path)
         {
             return $"[[File:{path}]]";
         }
 
+        /// <summary>
+        /// Creates a MediaWiki token/icon link with size and hyperlink.
+        /// </summary>
+        /// <param name="path">The path to the token icon file</param>
+        /// <param name="size">The icon size in pixels</param>
+        /// <param name="link">The target page for the hyperlink</param>
+        /// <returns>A MediaWiki file link with size and hyperlink</returns>
         private string PrintToken(string path, int size, string link)
         {
             return $"[[File:{path}|{size}px|link={link}]]";
         }
 
+        /// <summary>
+        /// Creates a MediaWiki token/icon link using a Token object.
+        /// </summary>
+        /// <param name="t">The token object containing icon path and linked page</param>
+        /// <param name="size">The icon size in pixels</param>
+        /// <returns>A MediaWiki file link with size and hyperlink</returns>
         private string PrintToken(Token t, int size)
         {
             return $"[[File:{t.IconPath}|{size}px|link={t.LinkedPage}]]";
         }
 
+        /// <summary>
+        /// Creates a MediaWiki icon link for vehicle/building icons.
+        /// Replaces spaces with underscores and adds '_icon' suffix.
+        /// </summary>
+        /// <param name="name">The name of the item</param>
+        /// <returns>A MediaWiki icon file link</returns>
         private string PrintIcon(string name)
         {
             name = name.Replace(" ", "_");
             return $"[[File:{name}_icon.png]]";
         }
+        /// <summary>
+        /// Creates a MediaWiki icon link with specified size for vehicle/building icons.
+        /// Replaces spaces with underscores and adds '_icon' suffix.
+        /// </summary>
+        /// <param name="name">The name of the item</param>
+        /// <param name="size">The icon height in pixels</param>
+        /// <returns>A MediaWiki icon file link with size specification</returns>
         private string PrintIcon(string name, int size)
         {
             name = name.Replace(" ", "_");
             return $"[[File:{name}_icon.png|x{size}px]]";
         }
 
+        /// <summary>
+        /// Formats the purchase cost for a vehicle as MediaWiki markup.
+        /// Handles single cost, dual cost, and quest reward scenarios.
+        /// </summary>
+        /// <param name="w">The vehicle to format the purchase cost for</param>
+        /// <returns>A formatted cost string with token icons</returns>
         private string PrintPurchaseCost(VehicleBase w)
         {
             if (w.CostAmount1 == 0)
@@ -259,6 +339,12 @@ namespace MashinkyWikiGen
                 return $"{w.CostAmount1 * -1} {PrintToken(w.CostType1.IconPath, 16, w.CostType1.LinkedPage)}{newLine}+{newLine}{w.CostAmount2 * -1} {PrintToken(w.CostType2.IconPath, 16, w.CostType2.LinkedPage)}";
         }
 
+        /// <summary>
+        /// Formats the operating cost (fuel consumption) for an engine as MediaWiki markup.
+        /// Handles single fuel type and dual fuel type scenarios.
+        /// </summary>
+        /// <param name="e">The engine to format the operating cost for</param>
+        /// <returns>A formatted fuel cost string with token icons</returns>
         private string PrintOperatingCost(Engine e)
         {
             if (e.FuelAmount2 == 0)
@@ -267,6 +353,12 @@ namespace MashinkyWikiGen
                 return $"{e.FuelAmount1 * -1} {PrintToken(e.FuelType1.IconPath, 16, e.FuelType1.LinkedPage)}{newLine}+{newLine}{e.FuelAmount2 * -1} {PrintToken(e.FuelType2.IconPath, 16, e.FuelType2.LinkedPage)}";
         }
 
+        /// <summary>
+        /// Formats the operating cost (fuel consumption) for an airplane as MediaWiki markup.
+        /// Handles single fuel type and dual fuel type scenarios.
+        /// </summary>
+        /// <param name="airplane">The airplane to format the operating cost for</param>
+        /// <returns>A formatted fuel cost string with token icons</returns>
         private string PrintOperatingCost(Airplane airplane)
         {
             if (airplane.FuelAmount2 == 0)
@@ -276,6 +368,11 @@ namespace MashinkyWikiGen
         }
         // unify those two methods to accept common interface
 
+        /// <summary>
+        /// Converts a boolean value to "Yes" or "No" text.
+        /// </summary>
+        /// <param name="b">The boolean value to convert</param>
+        /// <returns>"Yes" if true, "No" if false</returns>
         private string PrintBool(bool b)
         {
             if (b)
@@ -285,6 +382,11 @@ namespace MashinkyWikiGen
                 return "No";
         }
 
+        /// <summary>
+        /// Formats the end epoch for display, incrementing by 1 or showing "Never".
+        /// </summary>
+        /// <param name="epoch">The epoch number</param>
+        /// <returns>The incremented epoch number as string, or "Never" if epoch >= 7</returns>
         private string PrintEndEpoch(int epoch)
         {
             if (epoch < 7)
@@ -296,6 +398,12 @@ namespace MashinkyWikiGen
                 return "Never";
         }
 
+        /// <summary>
+        /// Creates a single building table with appropriate headers based on building type.
+        /// Generates different formats for power plants and industry buildings.
+        /// </summary>
+        /// <param name="path">The output path where the table file will be saved</param>
+        /// <param name="b">The building to create a table for</param>
         public void CreateSingleTable(string path, Building b)
         {
             string header = "";
@@ -321,10 +429,22 @@ namespace MashinkyWikiGen
             }
         }
 
+        /// <summary>
+        /// Creates a multi-row table for a list of buildings.
+        /// Currently not implemented - method body is empty.
+        /// </summary>
+        /// <param name="path">The output path where the table file will be saved</param>
+        /// <param name="buildings">The list of buildings to include in the table</param>
         public void CreateMultiTable(string path, List<Building> buildings)
         {
 
         }
+        /// <summary>
+        /// Creates a single upgrade table with appropriate headers based on upgrade type.
+        /// Generates different formats for power plant upgrades and industry building upgrades.
+        /// </summary>
+        /// <param name="path">The output path where the table file will be saved</param>
+        /// <param name="bu">The building upgrade to create a table for</param>
         public void CreateSingleTable(string path, IndustryBuildingUpgrade bu)
         {
             string header = "";
@@ -341,6 +461,12 @@ namespace MashinkyWikiGen
         }
 
 
+        /// <summary>
+        /// Creates a multi-row table for a list of building upgrades.
+        /// Generates different headers for power plant upgrades vs industry building upgrades.
+        /// </summary>
+        /// <param name="path">The output path where the table file will be saved</param>
+        /// <param name="upgrades">The list of building upgrades to include in the table</param>
         public void CreateMultiTable(string path, List<IndustryBuildingUpgrade> upgrades)
         {
             if (!upgrades.Any())
@@ -369,6 +495,12 @@ namespace MashinkyWikiGen
             }
         }
 
+        /// <summary>
+        /// Creates a MediaWiki table row for a power plant building.
+        /// Handles single and multiple production rules with electricity generation.
+        /// </summary>
+        /// <param name="b">The power plant to create a table row for</param>
+        /// <returns>A MediaWiki-formatted table row string</returns>
         private string CreateBuildingTable(PowerPlant b)
         {
             int rows = b.Rules.Count();
@@ -396,6 +528,12 @@ namespace MashinkyWikiGen
                 return result;
             }
         }
+        /// <summary>
+        /// Creates a MediaWiki table row for an industry building.
+        /// Handles buildings with no rules, single rule, or multiple production rules.
+        /// </summary>
+        /// <param name="b">The industry building to create a table row for</param>
+        /// <returns>A MediaWiki-formatted table row string</returns>
         private string CreateBuildingTable(IndustryBuilding b)
         {
             int rows = b.Rules.Count();
@@ -429,6 +567,12 @@ namespace MashinkyWikiGen
                 return result;
             }
         }
+        /// <summary>
+        /// Creates a MediaWiki table row for a power plant upgrade.
+        /// Includes upgrade costs, production rules, and electricity generation.
+        /// </summary>
+        /// <param name="bu">The power plant upgrade to create a table row for</param>
+        /// <returns>A MediaWiki-formatted table row string</returns>
         private string CreateBUTable(PowerPlantUpgrade bu)
         {
             int rows = bu.Rules.Count();
@@ -462,6 +606,12 @@ namespace MashinkyWikiGen
                 return result;
             }
         }
+        /// <summary>
+        /// Creates a MediaWiki table row for an industry building upgrade.
+        /// Includes upgrade costs, production rules, and building specifications.
+        /// </summary>
+        /// <param name="bu">The industry building upgrade to create a table row for</param>
+        /// <returns>A MediaWiki-formatted table row string</returns>
         private string CreateBUTable(IndustryBuildingUpgrade bu)
         {
             int rows = bu.Rules.Count();
@@ -496,10 +646,11 @@ namespace MashinkyWikiGen
             }
         }
         /// <summary>
-        /// designed only from same type groups - relax or amenities or luxury
+        /// Creates a multi-row table for town extensions of the same type.
+        /// Designed only for same type groups - relax, amenities, or luxury extensions.
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="tes"></param>
+        /// <param name="path">The output path where the table file will be saved</param>
+        /// <param name="tes">The list of town extensions to include in the table</param>
         public void CreateMultiTable(string path, List<TownExtension> tes)
         {
             if (!tes.Any())
@@ -514,28 +665,58 @@ namespace MashinkyWikiGen
             File.WriteAllText(path + "table.txt", $"{print}{endTable}");
         }
 
+        /// <summary>
+        /// Creates a single town extension table with headers for the specific bonus type.
+        /// Includes appropriate columns for relax, amenities, or luxury bonuses.
+        /// </summary>
+        /// <param name="path">The output path where the table file will be saved</param>
+        /// <param name="te">The town extension to create a table for</param>
         public void CreateSingleTable(string path, TownExtension te)
         {
             string header = $"\n!Image\n!Name\n!Cost{RelaxHeader(te.Relax)}{AmenitiesHeader(te.Amenities)}{LuxuryHeader(te.Luxury)}\n!Unlocked{newLine}at epoch\n!Building dimension{newLine}(tiles)\n!Unlocked{newLine}at epoch";
             File.WriteAllText(path + "table.txt", $"{startTable}{header}{CreateTETable(te)}{endTable}");
         }
 
+        /// <summary>
+        /// Creates a MediaWiki table row for a town extension.
+        /// Includes cost, happiness bonuses (relax/amenities/luxury), and dimensions.
+        /// </summary>
+        /// <param name="te">The town extension to create a table row for</param>
+        /// <returns>A MediaWiki-formatted table row string</returns>
         private string CreateTETable(TownExtension te)
         {
             return $"{newRow}{newColumn} {PrintImage(te.Name, 120)}{newColumn} {te.Name}{newColumn} {PrintCost(te)}{RelaxP(te.Relax)}{AmenitiesP(te.Amenities)}{LuxuryP(te.Luxury)}" +
                 $"{newColumn} {PrintDimensions(te.DimX, te.DimY)}{newColumn} {EpochPTE(te.Epoch)}";
         }
 
+        /// <summary>
+        /// Creates a single town decoration table with basic building information.
+        /// Includes image, name, cost, and building dimensions.
+        /// </summary>
+        /// <param name="path">The output path where the table file will be saved</param>
+        /// <param name="td">The town decoration to create a table for</param>
         public void CreateSingleTable(string path, TownDecoration td)
         {
             string header = $"\n!Image\n!Name\n!Cost\n!Building dimension{newLine}(tiles)";
             File.WriteAllText(path + "table.txt", $"{startTable}{header}{CreateTDTable(td)}{endTable}");
         }
 
+        /// <summary>
+        /// Creates a MediaWiki table row for a town decoration.
+        /// Includes basic information like cost and building dimensions.
+        /// </summary>
+        /// <param name="td">The town decoration to create a table row for</param>
+        /// <returns>A MediaWiki-formatted table row string</returns>
         private string CreateTDTable(TownDecoration td)
         {
             return $"{newRow}{newColumn} {PrintImage(td.Name, 120)}{newColumn} {td.Name}{newColumn} {PrintCost(td)}{newColumn} {PrintDimensions(td.DimX, td.DimY)}";
         }
+        /// <summary>
+        /// Formats production rule input for display in MediaWiki tables.
+        /// Combines normal rule input with electrification bonus input if applicable.
+        /// </summary>
+        /// <param name="r">The production rule to format</param>
+        /// <returns>A formatted input string with token icons</returns>
         private string PrintRuleInput(ProductionRule r)
         {
             if (r.RuleEl.Input1Count == 0)
@@ -546,6 +727,12 @@ namespace MashinkyWikiGen
 
         }
 
+        /// <summary>
+        /// Formats production rule output for display in MediaWiki tables.
+        /// Combines normal rule output with electrification bonus output if applicable.
+        /// </summary>
+        /// <param name="r">The production rule to format</param>
+        /// <returns>A formatted output string with token icons</returns>
         private string PrintRuleOutput(ProductionRule r)
         {
             if (r.RuleEl.Output1Count == 0)
@@ -556,6 +743,12 @@ namespace MashinkyWikiGen
                 return $"{PrintRuleMultiO(r.RuleN)} + ({PrintRuleMultiO(r.RuleEl)}){PrintToken(resources.Electrification, 16)}";
         }
 
+        /// <summary>
+        /// Formats multiple input resources for a production rule.
+        /// Handles 1-3 input types with their counts and token icons.
+        /// </summary>
+        /// <param name="r">The rule to format inputs for</param>
+        /// <returns>A formatted input string with token icons, or "-" if no inputs</returns>
         private string PrintRuleMultiI(IRule r)
         {
             if (r.Input1Count == 0)
@@ -568,6 +761,12 @@ namespace MashinkyWikiGen
                 return $"{r.Input1Count} {PrintToken(r.Input1Type, 16)} {r.Input2Count} {PrintToken(r.Input2Type, 16)} {r.Input3Count} {PrintToken(r.Input3Type, 16)}";
         }
 
+        /// <summary>
+        /// Formats multiple output resources for a production rule.
+        /// Handles 1-3 output types with their counts and token icons.
+        /// </summary>
+        /// <param name="r">The rule to format outputs for</param>
+        /// <returns>A formatted output string with token icons</returns>
         private string PrintRuleMultiO(IRule r)
         {
             if (r.Output2Count == 0)
@@ -578,6 +777,13 @@ namespace MashinkyWikiGen
                 return $"{r.Input1Count} {PrintToken(r.Output1Type, 16)} {r.Output2Count} {PrintToken(r.Output2Type, 16)} {r.Output3Count} {PrintToken(r.Output3Type, 16)}";
         }
 
+        /// <summary>
+        /// Formats building dimensions for display.
+        /// Shows "Random shape" for irregular buildings or "XxY" for rectangular ones.
+        /// </summary>
+        /// <param name="dimX">The X dimension (0 indicates random/irregular shape)</param>
+        /// <param name="dimY">The Y dimension (total tiles for irregular shapes)</param>
+        /// <returns>A formatted dimension string</returns>
         private string PrintDimensions(int dimX, int dimY)
         {
             if (dimX == 0)
@@ -586,11 +792,22 @@ namespace MashinkyWikiGen
                 return $"{dimX}x{dimY}";
         }
 
+        /// <summary>
+        /// Creates a MediaWiki rowspan attribute for table cells.
+        /// </summary>
+        /// <param name="rows">The number of rows to span</param>
+        /// <returns>A MediaWiki rowspan attribute string</returns>
         private string RowSpan(int rows)
         {
             return $"rowspan=\"{rows}\"|";
         }
 
+        /// <summary>
+        /// Formats pollution range for display in building tables.
+        /// Only shows pollution column if the building actually pollutes.
+        /// </summary>
+        /// <param name="pollution">The pollution range value</param>
+        /// <returns>A formatted pollution column or empty string if no pollution</returns>
         private string PrintPollution(int pollution)
         {
             if (pollution > 0)
@@ -599,11 +816,22 @@ namespace MashinkyWikiGen
                 return "";
         }
 
+        /// <summary>
+        /// Creates a MediaWiki link with display text.
+        /// </summary>
+        /// <param name="text">The text to display</param>
+        /// <param name="link">The target page to link to</param>
+        /// <returns>A MediaWiki link with custom display text</returns>
         private string LinkText(string text, string link)
         {
             return $"[[{link}|{text}]]";
         }
 
+        /// <summary>
+        /// Creates a table header for relax bonus if the value is greater than 0.
+        /// </summary>
+        /// <param name="relax">The relax bonus value</param>
+        /// <returns>A formatted header string or empty string if no relax bonus</returns>
         private string RelaxHeader(int relax)
         {
             if (relax == 0)
@@ -612,6 +840,11 @@ namespace MashinkyWikiGen
                 return $"\n!Relax{newLine}(Catchment area)";
         }
 
+        /// <summary>
+        /// Creates a table cell for relax bonus value if greater than 0.
+        /// </summary>
+        /// <param name="relax">The relax bonus value</param>
+        /// <returns>A formatted table cell or empty string if no relax bonus</returns>
         private string RelaxP(int relax)
         {
             if (relax == 0)
@@ -620,6 +853,11 @@ namespace MashinkyWikiGen
                 return $"{newColumn} {relax}";
         }
 
+        /// <summary>
+        /// Creates a table header for amenities bonus if the value is greater than 0.
+        /// </summary>
+        /// <param name="amenities">The amenities bonus value</param>
+        /// <returns>A formatted header string or empty string if no amenities bonus</returns>
         private string AmenitiesHeader(int amenities)
         {
             if (amenities == 0)
@@ -628,6 +866,11 @@ namespace MashinkyWikiGen
                 return $"\n!Amenities{newLine}(Catchment area)";
         }
 
+        /// <summary>
+        /// Creates a table cell for amenities bonus value if greater than 0.
+        /// </summary>
+        /// <param name="amenities">The amenities bonus value</param>
+        /// <returns>A formatted table cell or empty string if no amenities bonus</returns>
         private string AmenitiesP(int amenities)
         {
             if (amenities == 0)
@@ -636,6 +879,11 @@ namespace MashinkyWikiGen
                 return $"{newColumn} {amenities}";
         }
 
+        /// <summary>
+        /// Creates a table header for luxury bonus if the value is greater than 0.
+        /// </summary>
+        /// <param name="luxury">The luxury bonus value</param>
+        /// <returns>A formatted header string or empty string if no luxury bonus</returns>
         private string LuxuryHeader(int luxury)
         {
             if (luxury == 0)
@@ -644,6 +892,11 @@ namespace MashinkyWikiGen
                 return $"\n!Luxury{newLine}(Catchment area)";
         }
 
+        /// <summary>
+        /// Creates a table cell for luxury bonus value if greater than 0.
+        /// </summary>
+        /// <param name="luxury">The luxury bonus value</param>
+        /// <returns>A formatted table cell or empty string if no luxury bonus</returns>
         private string LuxuryP(int luxury)
         {
             if (luxury == 0)
@@ -652,6 +905,12 @@ namespace MashinkyWikiGen
                 return $"{newColumn} {luxury}";
         }
 
+        /// <summary>
+        /// Formats the cost for a building upgrade as MediaWiki markup.
+        /// Handles 1-3 different cost types and displays "NA" for free upgrades.
+        /// </summary>
+        /// <param name="u">The building upgrade to format the cost for</param>
+        /// <returns>A formatted cost string with token icons</returns>
         private string PrintCost(BuildingUpgrade u)
         {
             string print = "NA";
@@ -670,6 +929,11 @@ namespace MashinkyWikiGen
             return print;
         }
 
+        /// <summary>
+        /// Creates table headers for output bonus columns if the rule has distance bonuses.
+        /// </summary>
+        /// <param name="rule">The production rule to check for output bonuses</param>
+        /// <returns>Header columns for bonus output and distance, or empty string if no bonuses</returns>
         private string OutputBHeader(ProductionRule rule)
         {
             if (rule == null || rule.RuleN.OutputDistBonusCount == 0)
@@ -678,6 +942,12 @@ namespace MashinkyWikiGen
                 return $"\n!Bonus{newLine}ouput\n!Bonus distance{newLine}(tiles)";
         }
 
+        /// <summary>
+        /// Creates a table cell for bonus distance if the rule has distance bonuses.
+        /// </summary>
+        /// <param name="distance">The bonus distance value</param>
+        /// <param name="rule">The production rule to check for output bonuses</param>
+        /// <returns>A formatted distance cell or empty string if no distance bonus</returns>
         private string OutputBD(int distance, ProductionRule rule)
         {
             if (distance == 0 || rule.RuleN.OutputDistBonusCount == 0)
@@ -686,6 +956,11 @@ namespace MashinkyWikiGen
                 return $"{newColumn} {distance}";
         }
 
+        /// <summary>
+        /// Creates a table cell for output bonus resources if the rule has distance bonuses.
+        /// </summary>
+        /// <param name="rule">The production rule to format the output bonus for</param>
+        /// <returns>A formatted bonus output cell or empty string if no bonus</returns>
         private string OutputBonus(ProductionRule rule)
         {
             if (rule.RuleN.OutputDistBonusCount == 0)
@@ -693,6 +968,12 @@ namespace MashinkyWikiGen
             return $"{newColumn} {rule.RuleN.OutputDistBonusCount} {PrintToken(rule.RuleN.OutputDistBonusType, 16)}";
         }
 
+        /// <summary>
+        /// Creates a table cell for bonus distance in multi-rule tables, showing "-" when no bonus.
+        /// </summary>
+        /// <param name="distance">The bonus distance value</param>
+        /// <param name="rule">The production rule to check for output bonuses</param>
+        /// <returns>A formatted distance cell or "-" if no distance bonus</returns>
         private string OutputBDMulti(int distance, ProductionRule rule)
         {
             if (distance == 0 || rule.RuleN.OutputDistBonusCount == 0)
@@ -701,6 +982,11 @@ namespace MashinkyWikiGen
                 return $"{newColumn} {distance}";
         }
 
+        /// <summary>
+        /// Creates a table cell for output bonus in multi-rule tables, showing "-" when no bonus.
+        /// </summary>
+        /// <param name="rule">The production rule to format the output bonus for</param>
+        /// <returns>A formatted bonus output cell or "-" if no bonus</returns>
         private string OutputBonusMulti(ProductionRule rule)
         {
             if (rule.RuleN.OutputDistBonusCount == 0)
@@ -709,6 +995,12 @@ namespace MashinkyWikiGen
         }
 
 
+        /// <summary>
+        /// Creates a rowspan attribute for output bonus columns in multi-rule tables.
+        /// </summary>
+        /// <param name="distance">The bonus distance value</param>
+        /// <param name="rows">The number of rows to span</param>
+        /// <returns>A rowspan attribute or empty string if no distance bonus</returns>
         private string OutputBonusRowspan(int distance, int rows)
         {
             if (distance == 0)
@@ -717,6 +1009,11 @@ namespace MashinkyWikiGen
                 return $"{RowSpan(rows)}";
         }
 
+        /// <summary>
+        /// Formats epoch numbers for display, showing "-" for epoch 0.
+        /// </summary>
+        /// <param name="epoch">The epoch number</param>
+        /// <returns>The epoch number as string, or "-" if epoch is 0</returns>
         private string EpochP(int epoch)
         {
             if (epoch == 0)
@@ -725,6 +1022,12 @@ namespace MashinkyWikiGen
                 return $"{epoch}";
         }
 
+        /// <summary>
+        /// Formats epoch numbers for town extensions, showing "1" for epoch 0.
+        /// Town extensions default to epoch 1 when not specified.
+        /// </summary>
+        /// <param name="epoch">The epoch number</param>
+        /// <returns>The epoch number as string, or "1" if epoch is 0</returns>
         private string EpochPTE(int epoch)
         {
             if (epoch == 0)
