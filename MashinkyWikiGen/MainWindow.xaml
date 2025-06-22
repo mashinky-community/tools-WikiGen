@@ -1,0 +1,231 @@
+﻿<Window x:Class="MashinkyWikiGen.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MashinkyWikiGen"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="500" Width="1000" Background ="#38372e" WindowStartupLocation="CenterScreen" FontSize="12" Foreground="#f1edca">
+    <Window.Resources>
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#f1edca"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#f1edca"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
+        <Style x:Key="TextBoxStyle1" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="#25261e"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="#f1edca"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Resources>
+   <!-- <Window.DataContext>
+        <local:Resources/>
+    </Window.DataContext> -->
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.8*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <!--Header-->
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Token name"/>
+            <TextBlock Grid.Row="0" Grid.Column="1" Text="ID" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="0" Grid.Column="2" Text="Links to page" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="0" Grid.Column="4" Text="Material name"/>
+            <TextBlock Grid.Row="0" Grid.Column="5" Text="ID" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="0" Grid.Column="6" Text="Links to page" HorizontalAlignment="Center"/>
+            <TextBlock Grid.Row="12" Grid.Column="0" Text="Special references"/>
+
+            <!-- TOKENS -->
+            
+            <!--Money-->
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="{Binding MoneyToken.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="1" Grid.Column="1" Text="{Binding MoneyTID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="1" Grid.Column="2" Text="{Binding MoneyToken.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Timber-->
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="{Binding TimberToken.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="2" Grid.Column="1" Text="{Binding TimberTID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="2" Grid.Column="2" Text="{Binding TimberToken.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Coal-->
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="{Binding CoalToken.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="3" Grid.Column="1" Text="{Binding CoalTID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="3" Grid.Column="2" Text="{Binding CoalToken.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Iron-->
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="{Binding IronToken.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="4" Grid.Column="1" Text="{Binding IronTID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="4" Grid.Column="2" Text="{Binding IronToken.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Diesel-->
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="{Binding DieselToken.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="5" Grid.Column="1" Text="{Binding DieselTID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="5" Grid.Column="2" Text="{Binding DieselToken.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Steel-->
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="{Binding SteelToken.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="6" Grid.Column="1" Text="{Binding SteelTID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="6" Grid.Column="2" Text="{Binding SteelToken.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Electricity-->
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="{Binding ElectricityToken.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="7" Grid.Column="1" Text="{Binding ElectricityTID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="7" Grid.Column="2" Text="{Binding ElectricityToken.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Cement-->
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="{Binding CementToken.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="8" Grid.Column="1" Text="{Binding CementTID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="8" Grid.Column="2" Text="{Binding CementToken.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Reserve1-->
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="{Binding Reserve1Token.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="9" Grid.Column="1" Text="{Binding Reserve1TID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="9" Grid.Column="2" Text="{Binding Reserve1Token.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Reserve2-->
+            <TextBlock Grid.Row="10" Grid.Column="0" Text="{Binding Reserve2Token.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="10" Grid.Column="1" Text="{Binding Reserve2TID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="10" Grid.Column="2" Text="{Binding Reserve2Token.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            
+            <!--MATERIALS-->
+            <!--Log-->
+            <TextBlock Grid.Row="1" Grid.Column="4" Text="{Binding LogMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="1" Grid.Column="5" Text="{Binding LogMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="1" Grid.Column="6" Text="{Binding LogMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Coal-->
+            <TextBlock Grid.Row="2" Grid.Column="4" Text="{Binding CoalMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="2" Grid.Column="5" Text="{Binding CoalMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="2" Grid.Column="6" Text="{Binding CoalMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Iron ore-->
+            <TextBlock Grid.Row="3" Grid.Column="4" Text="{Binding IronOreMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="3" Grid.Column="5" Text="{Binding IronOreMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="3" Grid.Column="6" Text="{Binding IronOreMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Crude oil-->
+            <TextBlock Grid.Row="4" Grid.Column="4" Text="{Binding CrudeOilMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="4" Grid.Column="5" Text="{Binding CrudeOilMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="4" Grid.Column="6" Text="{Binding CrudeOilMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Sand-->
+            <TextBlock Grid.Row="5" Grid.Column="4" Text="{Binding SandMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="5" Grid.Column="5" Text="{Binding SandMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="5" Grid.Column="6" Text="{Binding SandMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Iron-->
+            <TextBlock Grid.Row="6" Grid.Column="4" Text="{Binding IronMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="6" Grid.Column="5" Text="{Binding IronMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="6" Grid.Column="6" Text="{Binding IronMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Goods-->
+            <TextBlock Grid.Row="7" Grid.Column="4" Text="{Binding GoodsMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="7" Grid.Column="5" Text="{Binding GoodsMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="7" Grid.Column="6" Text="{Binding GoodsMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Food-->
+            <TextBlock Grid.Row="8" Grid.Column="4" Text="{Binding FoodMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="8" Grid.Column="5" Text="{Binding FoodMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="8" Grid.Column="6" Text="{Binding FoodMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Diesel-->
+            <TextBlock Grid.Row="9" Grid.Column="4" Text="{Binding DieselMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="9" Grid.Column="5" Text="{Binding DieselMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="9" Grid.Column="6" Text="{Binding DieselMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Steel-->
+            <TextBlock Grid.Row="10" Grid.Column="4" Text="{Binding SteelMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="10" Grid.Column="5" Text="{Binding SteelMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="10" Grid.Column="6" Text="{Binding SteelMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Limestone-->
+            <TextBlock Grid.Row="11" Grid.Column="4" Text="{Binding LimestoneMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="11" Grid.Column="5" Text="{Binding LimestoneMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="11" Grid.Column="6" Text="{Binding LimestoneMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Cement-->
+            <TextBlock Grid.Row="12" Grid.Column="4" Text="{Binding CementMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="12" Grid.Column="5" Text="{Binding CementMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="12" Grid.Column="6" Text="{Binding CementMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Passengers-->
+            <TextBlock Grid.Row="13" Grid.Column="4" Text="{Binding PassengersMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="13" Grid.Column="5" Text="{Binding PassengersMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="13" Grid.Column="6" Text="{Binding PassengersMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Mail-->
+            <TextBlock Grid.Row="14" Grid.Column="4" Text="{Binding MailMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="14" Grid.Column="5" Text="{Binding MailMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="14" Grid.Column="6" Text="{Binding MailMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Reserve1-->
+            <TextBlock Grid.Row="15" Grid.Column="4" Text="{Binding GarbageMaterial.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="15" Grid.Column="5" Text="{Binding GarbageMID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="15" Grid.Column="6" Text="{Binding GarbageMaterial.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <!--Reserve2-->
+            <TextBlock Grid.Row="16" Grid.Column="4" Text="{Binding Reserve2Material.Name, Mode=OneTime}" Margin="2"/>
+            <TextBox   Grid.Row="16" Grid.Column="5" Text="{Binding Reserve2MID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="16" Grid.Column="6" Text="{Binding Reserve2Material.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            
+            <!--Special-->
+            <TextBlock Grid.Row="13" Grid.Column="0" Text="Pollution"/>
+            <TextBox   Grid.Row="13" Grid.Column="2" Text="{Binding LinkPollution, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBlock Grid.Row="14" Grid.Column="0" Text="Electrification"/>
+            <TextBox   Grid.Row="14" Grid.Column="1" Text="{Binding ElectrificationTID, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBox   Grid.Row="14" Grid.Column="2" Text="{Binding Electrification.LinkedPage, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBlock Grid.Row="15" Grid.Column="0" Text="Production tick"/>
+            <TextBox   Grid.Row="15" Grid.Column="2" Text="{Binding LinkTick, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+            <TextBlock Grid.Row="16" Grid.Column="0" Text="Operating Cost"/>
+            <TextBox   Grid.Row="16" Grid.Column="2" Text="{Binding LinkOperatingCost, Mode=TwoWay}" Style="{StaticResource TextBoxStyle1}" Margin="2"/>
+
+
+            <Button Grid.Row="17" Grid.Column="2" Content="Generate vehicles" Name="GenerateVehiclesButton" Click="GenerateVehiclesButton_Click" Margin="2"/>
+            <Button Grid.Row="17" Grid.Column="4" Content="Generate buildings" Name="GenerateBuildingsButton" Click="GenerateBuildingsButton_Click" Margin="2"/>
+        </Grid>
+       
+    </Grid>
+
+
+
+</Window>
