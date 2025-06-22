@@ -6,44 +6,117 @@ using System.Threading.Tasks;
 
 namespace MashinkyWikiGen
 {
+    /// <summary>
+    /// Represents a normal (non-electric) production rule for buildings that defines input/output resource requirements.
+    /// </summary>
     public class RuleNormal : IRule
     {        
+        /// <summary>
+        /// The first input resource type required for this production rule.
+        /// </summary>
+        public Token Input1Type { get; private set; }
+        
+        /// <summary>
+        /// The quantity of the first input resource required.
+        /// </summary>
+        public int Input1Count { get; private set; }
+        
+        /// <summary>
+        /// The second input resource type required for this production rule.
+        /// </summary>
+        public Token Input2Type { get; private set; }
+        
+        /// <summary>
+        /// The quantity of the second input resource required.
+        /// </summary>
+        public int Input2Count { get; private set; }
+        
+        /// <summary>
+        /// The third input resource type required for this production rule.
+        /// </summary>
+        public Token Input3Type { get; private set; }
+        
+        /// <summary>
+        /// The quantity of the third input resource required.
+        /// </summary>
+        public int Input3Count { get; private set; }
+        
+        /// <summary>
+        /// The first output resource type produced by this production rule.
+        /// </summary>
+        public Token Output1Type { get; private set; }
+        
+        /// <summary>
+        /// The quantity of the first output resource produced.
+        /// </summary>
+        public int Output1Count { get; private set; }
+        
+        /// <summary>
+        /// The second output resource type produced by this production rule.
+        /// </summary>
+        public Token Output2Type { get; private set; }
+        
+        /// <summary>
+        /// The quantity of the second output resource produced.
+        /// </summary>
+        public int Output2Count { get; private set; }
+        
+        /// <summary>
+        /// The third output resource type produced by this production rule.
+        /// </summary>
+        public Token Output3Type { get; private set; }
+        
+        /// <summary>
+        /// The quantity of the third output resource produced.
+        /// </summary>
+        public int Output3Count { get; private set; }
+        
+        /// <summary>
+        /// The quantity of bonus output produced when building is near specific resources.
+        /// </summary>
+        public int OutputDistBonusCount { get; private set; }
+        
+        /// <summary>
+        /// The type of bonus output produced when building is near specific resources.
+        /// </summary>
+        public Token OutputDistBonusType { get; private set; }
 
-        public Token Input1T { get; private set; }
-        public int Input1C { get; private set; }
-        public Token Input2T { get; private set; }
-        public int Input2C { get; private set; }
-        public Token Input3T { get; private set; }
-        public int Input3C { get; private set; }
-        public Token Output1T { get; private set; }
-        public int Output1C { get; private set; }
-        public Token Output2T { get; private set; }
-        public int Output2C { get; private set; }
-        public Token Output3T { get; private set; }
-        public int Output3C { get; private set; }
-        public int OutputDistBonusC { get; private set; }
-        public Token OutputDistBonusT { get; private set; }
 
 
-
-        public RuleNormal(Token input1T, int input1C, Token input2T, int input2C, Token input3T, int input3C, Token output1T, int output1C, Token output2T, int output2C, Token output3T, 
-            int output3C, int outputDistBonusC, Token outputDistBonusT)
+        /// <summary>
+        /// Initializes a new instance of the RuleNormal class.
+        /// </summary>
+        /// <param name="input1Type">The first input resource type</param>
+        /// <param name="input1Count">The quantity of the first input resource</param>
+        /// <param name="input2Type">The second input resource type</param>
+        /// <param name="input2Count">The quantity of the second input resource</param>
+        /// <param name="input3Type">The third input resource type</param>
+        /// <param name="input3Count">The quantity of the third input resource</param>
+        /// <param name="output1Type">The first output resource type</param>
+        /// <param name="output1Count">The quantity of the first output resource</param>
+        /// <param name="output2Type">The second output resource type</param>
+        /// <param name="output2Count">The quantity of the second output resource</param>
+        /// <param name="output3Type">The third output resource type</param>
+        /// <param name="output3Count">The quantity of the third output resource</param>
+        /// <param name="outputDistBonusCount">The quantity of bonus output when near specific resources</param>
+        /// <param name="outputDistBonusType">The type of bonus output when near specific resources</param>
+        public RuleNormal(Token input1Type, int input1Count, Token input2Type, int input2Count, Token input3Type, int input3Count, Token output1Type, int output1Count, Token output2Type, int output2Count, Token output3Type, 
+            int output3Count, int outputDistBonusCount, Token outputDistBonusType)
         {
-            Input1T = input1T;
-            Input1C = input1C;
-            Input2T = input2T;
-            Input2C = input2C;
-            Input3T = input3T;
-            Input3C = input3C;
-            Output1T = output1T;
-            Output1C = output1C;
-            Output2T = output2T;
-            Output2C = output2C;
-            Output3T = output3T;
-            Output3C = output3C;
-            OutputDistBonusC = outputDistBonusC;
-            OutputDistBonusT = outputDistBonusT;
-            
+            Input1Type = input1Type;
+            Input1Count = input1Count;
+            Input2Type = input2Type;
+            Input2Count = input2Count;
+            Input3Type = input3Type;
+            Input3Count = input3Count;
+            Output1Type = output1Type;
+            Output1Count = output1Count;
+            Output2Type = output2Type;
+            Output2Count = output2Count;
+            Output3Type = output3Type;
+            Output3Count = output3Count;
+            OutputDistBonusCount = outputDistBonusCount;
+            OutputDistBonusType = outputDistBonusType;
         }
     }
 }

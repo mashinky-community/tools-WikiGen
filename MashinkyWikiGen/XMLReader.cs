@@ -12,26 +12,95 @@ using System.Xml.Linq;
 
 namespace MashinkyWikiGen
 {
+    /// <summary>
+    /// Reads and parses Mashinky XML data files to extract game entities like vehicles, buildings, and resources.
+    /// Handles both vanilla game files and mod files, with automatic game folder detection and data parsing.
+    /// </summary>
     public class XMLReader
     {
+        /// <summary>
+        /// The image reader for extracting game icons and graphics.
+        /// </summary>
         private ImageReader imageReader;
+        
+        /// <summary>
+        /// The path to the Mashinky game folder.
+        /// </summary>
         public string gameFolderPath;
+        
+        /// <summary>
+        /// The XML corrector for fixing malformed XML data.
+        /// </summary>
         private XMLCorrector xmlCorrector = new XMLCorrector();
+        
+        /// <summary>
+        /// The list of parsed wagon vehicles.
+        /// </summary>
         public List<VehicleBase> Wagons { get; private set; } = new List<VehicleBase>();
+        
+        /// <summary>
+        /// The list of parsed engine vehicles.
+        /// </summary>
         public List<VehicleBase> Engines { get; private set; } = new List<VehicleBase>();
+        
+        /// <summary>
+        /// The list of parsed car vehicles.
+        /// </summary>
         public List<VehicleBase> Cars { get; private set; } = new List<VehicleBase>();
+        
+        /// <summary>
+        /// The list of parsed airplane vehicles.
+        /// </summary>
         public List<VehicleBase> Airplanes { get; } = new List<VehicleBase>();
+        
+        /// <summary>
+        /// The list of parsed buildings.
+        /// </summary>
         public List<Building> Buildings { get; private set; } = new List<Building>();
+        
+        /// <summary>
+        /// The list of parsed town upgrades and decorations.
+        /// </summary>
         public List<BuildingUpgrade> TownUpgrades { get; private set; } = new List<BuildingUpgrade>();
+        
+        /// <summary>
+        /// The list of token resources for ID lookup.
+        /// </summary>
         private List<Token> tokens;
+        
+        /// <summary>
+        /// The list of material resources for ID lookup.
+        /// </summary>
         private List<Token> materials;
+        
+        /// <summary>
+        /// The fallback token used when an ID cannot be found.
+        /// </summary>
         private Token invalidToken;
+        
+        /// <summary>
+        /// The XML translator for parsing attribute strings.
+        /// </summary>
         private XMLTranslator xmlTranslator;
+        
+        /// <summary>
+        /// The combined list of tokens and materials.
+        /// </summary>
         private List<Token> tokMat;
+        
+        /// <summary>
+        /// The list of paths to text mod files.
+        /// </summary>
         private List<string> textmodPaths = new List<string>();
 
 
 
+        /// <summary>
+        /// Initializes a new instance of the XMLReader class.
+        /// </summary>
+        /// <param name="tokens">The list of token resources for ID lookup</param>
+        /// <param name="materials">The list of material resources for ID lookup</param>
+        /// <param name="textmodPaths">The list of paths to text mod files</param>
         public XMLReader(List<Token> tokens, List<Token> materials, List<string> textmodPaths)
         {
             File.WriteAllText("traceWikiGen.txt", "\nInitializing xmlReader");
@@ -47,11 +116,20 @@ namespace MashinkyWikiGen
 
         }
 
+        /// <summary>
+        /// Concatenates the tokens and materials lists into a single combined list.
+        /// Updates the XML translator with the combined list for ID lookups.
+        /// </summary>
         public void ConcatTokMat()
         {
             tokMat = tokens.Concat(materials).ToList();
             xmlTranslator.tokMat = tokMat;
         }
+        /// <summary>
+        /// Gets the Mashinky game folder path.
+        /// Currently returns the current directory, but contains commented code for Steam registry detection.
+        /// </summary>
+        /// <returns>The path to the Mashinky game folder</returns>
         public string GetGameFolder()
         {
 
@@ -81,6 +159,13 @@ namespace MashinkyWikiGen
 
         }
 
+        /// <summary>
+        /// Reads the icon coordinates from the tcoords.xml file for a specific icon ID.
+        /// Returns scaled coordinates (multiplied by 2) for sprite sheet extraction.
+        /// </summary>
+        /// <param name="path">The path to the tcoords.xml file</param>
+        /// <param name="ID">The hex ID of the icon to find coordinates for</param>
+        /// <returns>An array containing [x, y, width, height] coordinates, or [0,0,0,0] if not found</returns>
         public int[] ReadIconCoords(string path, string ID)
         {
             int scale = 2;
@@ -113,6 +198,14 @@ namespace MashinkyWikiGen
         /// <param name="iconSource"></param>
         /// <param name="coords">X, Y, weight, height</param>
         /// <returns>Cloned Bitmap within specified coords</returns>
+        /// <summary>
+        /// Reads and crops an icon from a texture file using the specified coordinates.
+        /// Creates a blank image if the hash or texture path is empty or if coordinates are invalid.
+        /// </summary>
+        /// <param name="hash">The hex ID hash for finding icon coordinates</param>
+        /// <param name="iconTexturePath">The relative path to the icon texture file</param>
+        /// <param name="path">The base path to the game folder</param>
+        /// <returns>A bitmap image of the cropped icon</returns>
         public Bitmap ReadIcon(string hash, string iconTexturePath, string path)
         {
             Bitmap iconImage = null;
@@ -132,6 +225,11 @@ namespace MashinkyWikiGen
             return iconImage;
         }
 
+        /// <summary>
+        /// Reads and parses vehicle data from the wagon_types.xml file.
+        /// Processes wagons, engines, cars, and airplanes with their attributes and costs.
+        /// </summary>
+        /// <param name="path">The path to the folder containing the wagon_types.xml file</param>
         public void ReadWGT(string path)
         {
             string pathXML = path + @"\media\config\wagon_types.xml";
@@ -310,6 +408,11 @@ namespace MashinkyWikiGen
             }
         }
 
+        /// <summary>
+        /// Reads and parses building data from the building_types.xml file.
+        /// Processes industry buildings, power plants, town extensions, and decorations with their upgrades and rules.
+        /// </summary>
+        /// <param name="path">The path to the folder containing the building_types.xml file</param>
         public void ReadBuildings(string path)
         {
             string pathXML = path + @"\media\config\building_types.xml";
@@ -531,6 +634,12 @@ namespace MashinkyWikiGen
 
         }
 
+        /// <summary>
+        /// Reads the icon hash for a token from the cargo_types.xml file.
+        /// Searches through TokenType elements to find the matching ID.
+        /// </summary>
+        /// <param name="ID">The hex ID of the token to find the icon hash for</param>
+        /// <returns>The icon hash string, or empty string if not found</returns>
         public string ReadTokenIconHash(string ID)
         {
             string pathXML = gameFolderPath + @"\media\config\cargo_types.xml";
@@ -547,6 +656,12 @@ namespace MashinkyWikiGen
             }
             return hash;
         }
+        /// <summary>
+        /// Reads the icon hash for a material from the cargo_types.xml file.
+        /// Searches through CargoType elements to find the matching ID.
+        /// </summary>
+        /// <param name="ID">The hex ID of the material to find the icon hash for</param>
+        /// <returns>The icon hash string, or empty string if not found</returns>
         public string ReadMaterialIconHash(string ID)
         {
             string pathXML = gameFolderPath + @"\media\config\cargo_types.xml";
@@ -562,10 +677,11 @@ namespace MashinkyWikiGen
             return hash;
         }
         /// <summary>
-        /// reads english texts from texts.xml
+        /// Reads English text from texts.xml files using the specified hash.
+        /// Searches both vanilla game files and mod files for text translations.
         /// </summary>
-        /// <param name="hash"></param>
-        /// <returns>text for specified hash</returns>
+        /// <param name="hash">The hex hash ID of the text to retrieve</param>
+        /// <returns>The English text for the specified hash, or "NA" if not found</returns>
         public string ReadTextFromHash(string hash)
         {
             string pathXML = gameFolderPath + @"\media\config\texts.xml";

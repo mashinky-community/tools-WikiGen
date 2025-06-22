@@ -4,25 +4,78 @@ using System.Linq;
 
 namespace MashinkyWikiGen
 {
+    /// <summary>
+    /// Generates MediaWiki-formatted tables and markup for game entities.
+    /// Handles creation of wikitables for vehicles, buildings, and upgrades with proper formatting and links.
+    /// </summary>
     public class WikiScriptGen
     {
+        /// <summary>
+        /// MediaWiki line break markup.
+        /// </summary>
         const string newLine = "<br/>";
+        
+        /// <summary>
+        /// MediaWiki table start markup with wikitable styling.
+        /// </summary>
         const string startTable = "{| class=\"wikitable transformable \" style=text-align:center";
+        
+        /// <summary>
+        /// MediaWiki table end markup.
+        /// </summary>
         const string endTable = "\n|}";
+        
+        /// <summary>
+        /// MediaWiki table row separator.
+        /// </summary>
         const string newRow = "\n|-";
+        
+        /// <summary>
+        /// MediaWiki table row separator with indentation for nested tables.
+        /// </summary>
         const string newRowTab = "\n   |-";
+        
+        /// <summary>
+        /// MediaWiki table column separator.
+        /// </summary>
         const string newColumn = "\n|";
+        
+        /// <summary>
+        /// MediaWiki table column separator with indentation for nested tables.
+        /// </summary>
         const string newColumnTab = "\n   |";
+        
+        /// <summary>
+        /// Standard indentation string.
+        /// </summary>
         const string tab = "   ";
+        
+        /// <summary>
+        /// Double indentation string.
+        /// </summary>
         const string doubleTab = "      ";
+        
+        /// <summary>
+        /// The resources manager providing access to tokens and links.
+        /// </summary>
         private Resources resources;
 
 
+        /// <summary>
+        /// Initializes a new instance of the WikiScriptGen class.
+        /// </summary>
+        /// <param name="resources">The resources manager providing access to tokens and links</param>
         public WikiScriptGen(Resources resources)
         {
             this.resources = resources;
         }
 
+        /// <summary>
+        /// Creates a multi-row table for a list of vehicles of the same type.
+        /// Generates appropriate headers and formatting based on vehicle type.
+        /// </summary>
+        /// <param name="path">The output path where the table file will be saved</param>
+        /// <param name="w">The list of vehicles to include in the table</param>
         public void CreateMultiTable(string path, List<VehicleBase> w)
         {
             if (!w.Any())
@@ -485,7 +538,7 @@ namespace MashinkyWikiGen
         }
         private string PrintRuleInput(ProductionRule r)
         {
-            if (r.RuleEl.Input1C == 0)
+            if (r.RuleEl.Input1Count == 0)
             {
                 return $"{PrintRuleMultiI(r.RuleN)}";
             }
@@ -495,7 +548,7 @@ namespace MashinkyWikiGen
 
         private string PrintRuleOutput(ProductionRule r)
         {
-            if (r.RuleEl.Output1C == 0)
+            if (r.RuleEl.Output1Count == 0)
             {
                 return $"{PrintRuleMultiO(r.RuleN)}";
             }
@@ -505,24 +558,24 @@ namespace MashinkyWikiGen
 
         private string PrintRuleMultiI(IRule r)
         {
-            if (r.Input1C == 0)
+            if (r.Input1Count == 0)
                 return "-";
-            else if (r.Input2C == 0)
-                return $"{r.Input1C} {PrintToken(r.Input1T, 16)}";
-            else if (r.Input3C == 0)
-                return $"{r.Input1C} {PrintToken(r.Input1T, 16)} {r.Input2C} {PrintToken(r.Input2T, 16)}";
+            else if (r.Input2Count == 0)
+                return $"{r.Input1Count} {PrintToken(r.Input1Type, 16)}";
+            else if (r.Input3Count == 0)
+                return $"{r.Input1Count} {PrintToken(r.Input1Type, 16)} {r.Input2Count} {PrintToken(r.Input2Type, 16)}";
             else
-                return $"{r.Input1C} {PrintToken(r.Input1T, 16)} {r.Input2C} {PrintToken(r.Input2T, 16)} {r.Input3C} {PrintToken(r.Input3T, 16)}";
+                return $"{r.Input1Count} {PrintToken(r.Input1Type, 16)} {r.Input2Count} {PrintToken(r.Input2Type, 16)} {r.Input3Count} {PrintToken(r.Input3Type, 16)}";
         }
 
         private string PrintRuleMultiO(IRule r)
         {
-            if (r.Output2C == 0)
-                return $"{r.Output1C} {PrintToken(r.Output1T, 16)}";
-            else if (r.Input3C == 0)
-                return $"{r.Output1C} {PrintToken(r.Output1T, 16)} {r.Output2C} {PrintToken(r.Output2T, 16)}";
+            if (r.Output2Count == 0)
+                return $"{r.Output1Count} {PrintToken(r.Output1Type, 16)}";
+            else if (r.Input3Count == 0)
+                return $"{r.Output1Count} {PrintToken(r.Output1Type, 16)} {r.Output2Count} {PrintToken(r.Output2Type, 16)}";
             else
-                return $"{r.Input1C} {PrintToken(r.Output1T, 16)} {r.Output2C} {PrintToken(r.Output2T, 16)} {r.Output3C} {PrintToken(r.Output3T, 16)}";
+                return $"{r.Input1Count} {PrintToken(r.Output1Type, 16)} {r.Output2Count} {PrintToken(r.Output2Type, 16)} {r.Output3Count} {PrintToken(r.Output3Type, 16)}";
         }
 
         private string PrintDimensions(int dimX, int dimY)
@@ -602,24 +655,24 @@ namespace MashinkyWikiGen
         private string PrintCost(BuildingUpgrade u)
         {
             string print = "NA";
-            if (u.Cost2C == 0 && !(u.Cost1C == 0))
+            if (u.Cost2Count == 0 && !(u.Cost1Count == 0))
             {
-                print = $"{u.Cost1C * -1} {PrintToken(u.Cost1T, 16)}";
+                print = $"{u.Cost1Count * -1} {PrintToken(u.Cost1Type, 16)}";
             }
-            else if (u.Cost3C == 0)
+            else if (u.Cost3Count == 0)
             {
-                print = $"{u.Cost1C * -1} {PrintToken(u.Cost1T, 16)}{newLine}{u.Cost2C * -1} {PrintToken(u.Cost2T, 16)}";
+                print = $"{u.Cost1Count * -1} {PrintToken(u.Cost1Type, 16)}{newLine}{u.Cost2Count * -1} {PrintToken(u.Cost2Type, 16)}";
             }
             else
             {
-                print = $"{u.Cost1C * -1} {PrintToken(u.Cost1T, 16)}{newLine}{u.Cost2C * -1} {PrintToken(u.Cost2T, 16)}{newLine}{u.Cost3C * -1} {PrintToken(u.Cost3T, 16)}";
+                print = $"{u.Cost1Count * -1} {PrintToken(u.Cost1Type, 16)}{newLine}{u.Cost2Count * -1} {PrintToken(u.Cost2Type, 16)}{newLine}{u.Cost3Count * -1} {PrintToken(u.Cost3Type, 16)}";
             }
             return print;
         }
 
         private string OutputBHeader(ProductionRule rule)
         {
-            if (rule == null || rule.RuleN.OutputDistBonusC == 0)
+            if (rule == null || rule.RuleN.OutputDistBonusCount == 0)
                 return "";
             else
                 return $"\n!Bonus{newLine}ouput\n!Bonus distance{newLine}(tiles)";
@@ -627,7 +680,7 @@ namespace MashinkyWikiGen
 
         private string OutputBD(int distance, ProductionRule rule)
         {
-            if (distance == 0 || rule.RuleN.OutputDistBonusC == 0)
+            if (distance == 0 || rule.RuleN.OutputDistBonusCount == 0)
                 return "";
             else
                 return $"{newColumn} {distance}";
@@ -635,14 +688,14 @@ namespace MashinkyWikiGen
 
         private string OutputBonus(ProductionRule rule)
         {
-            if (rule.RuleN.OutputDistBonusC == 0)
+            if (rule.RuleN.OutputDistBonusCount == 0)
                 return "";
-            return $"{newColumn} {rule.RuleN.OutputDistBonusC} {PrintToken(rule.RuleN.OutputDistBonusT, 16)}";
+            return $"{newColumn} {rule.RuleN.OutputDistBonusCount} {PrintToken(rule.RuleN.OutputDistBonusType, 16)}";
         }
 
         private string OutputBDMulti(int distance, ProductionRule rule)
         {
-            if (distance == 0 || rule.RuleN.OutputDistBonusC == 0)
+            if (distance == 0 || rule.RuleN.OutputDistBonusCount == 0)
                 return $"{newColumn} -";
             else
                 return $"{newColumn} {distance}";
@@ -650,9 +703,9 @@ namespace MashinkyWikiGen
 
         private string OutputBonusMulti(ProductionRule rule)
         {
-            if (rule.RuleN.OutputDistBonusC == 0)
+            if (rule.RuleN.OutputDistBonusCount == 0)
                 return $"{newColumn} -";
-            return $"{newColumn} {rule.RuleN.OutputDistBonusC} {PrintToken(rule.RuleN.OutputDistBonusT, 16)}";
+            return $"{newColumn} {rule.RuleN.OutputDistBonusCount} {PrintToken(rule.RuleN.OutputDistBonusType, 16)}";
         }
 
 

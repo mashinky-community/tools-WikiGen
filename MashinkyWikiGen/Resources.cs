@@ -10,75 +10,154 @@ using System.Windows.Media.Imaging;
 
 namespace MashinkyWikiGen
 {
+    /// <summary>
+    /// Central coordinator class that manages all game data processing and wiki generation.
+    /// Handles initialization of tokens, materials, XML reading, and orchestrates the entire wiki generation workflow.
+    /// </summary>
     public class Resources
     {
+        // Token properties for currencies
+        /// <summary>The money token used for purchases.</summary>
         public Token MoneyToken { get; set; }
+        /// <summary>The timber token used for construction.</summary>
         public Token TimberToken { get; set; }
+        /// <summary>The coal token used for fuel and production.</summary>
         public Token CoalToken { get; set; }
+        /// <summary>The iron token used for production.</summary>
         public Token IronToken { get; set; }
+        /// <summary>The diesel token used for fuel.</summary>
         public Token DieselToken { get; set; }
+        /// <summary>The steel token used for advanced production.</summary>
         public Token SteelToken { get; set; }
+        /// <summary>The electricity token used for power.</summary>
         public Token ElectricityToken { get; set; }
+        /// <summary>The cement token used for construction.</summary>
         public Token CementToken { get; set; }
+        /// <summary>The first reserve token (unused).</summary>
         public Token Reserve1Token { get; set; }
+        /// <summary>The second reserve token (unused).</summary>
         public Token Reserve2Token { get; set; }
+
+        // Material properties for cargo types
+        /// <summary>The log material token for raw timber.</summary>
         public Token LogMaterial { get; set; }
+        /// <summary>The coal material token for mining.</summary>
         public Token CoalMaterial { get; set; }
+        /// <summary>The iron ore material token for mining.</summary>
         public Token IronOreMaterial { get; set; }
+        /// <summary>The crude oil material token for extraction.</summary>
         public Token CrudeOilMaterial { get; set; }
+        /// <summary>The sand material token for construction.</summary>
         public Token SandMaterial { get; set; }
+        /// <summary>The timber material token for processed wood.</summary>
         public Token TimberMaterial { get; set; }
+        /// <summary>The iron material token for processed metal.</summary>
         public Token IronMaterial { get; set; }
+        /// <summary>The goods material token for manufactured items.</summary>
         public Token GoodsMaterial { get; set; }
+        /// <summary>The food material token for consumption.</summary>
         public Token FoodMaterial { get; set; }
+        /// <summary>The diesel material token for refined fuel.</summary>
         public Token DieselMaterial { get; set; }
+        /// <summary>The steel material token for advanced manufacturing.</summary>
         public Token SteelMaterial { get; set; }
+        /// <summary>The limestone material token for cement production.</summary>
         public Token LimestoneMaterial { get; set; }
+        /// <summary>The cement material token for construction.</summary>
         public Token CementMaterial { get; set; }
+        /// <summary>The passengers material token for transportation.</summary>
         public Token PassengersMaterial { get; set; }
+        /// <summary>The mail material token for postal services.</summary>
         public Token MailMaterial { get; set; }
+        /// <summary>The garbage material token for waste management.</summary>
         public Token GarbageMaterial { get; set; }
+        /// <summary>The second reserve material token (unused).</summary>
         public Token Reserve2Material { get; set; }
 
+        /// <summary>The XML reader for parsing game data files.</summary>
         private XMLReader xmlReader;
+        /// <summary>The data processor for generating wiki resources.</summary>
         private DataProcessor dataProcessor;
+        /// <summary>The list of all token resources.</summary>
         private List<Token> tokens = new List<Token>();
+        /// <summary>The list of all material resources.</summary>
         private List<Token> materials = new List<Token>();
+        /// <summary>The list of paths to WGT mod files.</summary>
         private List<string> WGTmodPaths = new List<string>();
+        /// <summary>The list of paths to text mod files.</summary>
         private List<string> textmodPaths = new List<string>();
+        /// <summary>The list of icon resources.</summary>
         private List<Token> icons = new List<Token>();
+
+        // Token IDs for currencies (TID = Token ID)
+        /// <summary>The hex ID for the money token.</summary>
         public string MoneyTID { get; set; } = "F0000000";
+        /// <summary>The hex ID for the timber token.</summary>
         public string TimberTID { get; set; } = "F07C5273";
+        /// <summary>The hex ID for the coal token.</summary>
         public string CoalTID { get; set; } = "F1283C03";
+        /// <summary>The hex ID for the iron token.</summary>
         public string IronTID { get; set; } = "F27DB683";
+        /// <summary>The hex ID for the diesel token.</summary>
         public string DieselTID { get; set; } = "F29BF6C1";
+        /// <summary>The hex ID for the steel token.</summary>
         public string SteelTID { get; set; } = "F8E3D3EC";
+        /// <summary>The hex ID for the electricity token.</summary>
         public string ElectricityTID { get; set; } = "F9D8BF64";
+        /// <summary>The hex ID for the cement token.</summary>
         public string CementTID { get; set; } = "FAD8464A";
+        /// <summary>The hex ID for the first reserve token.</summary>
         public string Reserve1TID { get; set; } = "";
+        /// <summary>The hex ID for the second reserve token.</summary>
         public string Reserve2TID { get; set; } = "";
+
+        // Material IDs (MID = Material ID)
+        /// <summary>The hex ID for the log material.</summary>
         public string LogMID { get; set; } = "3199AA74";
+        /// <summary>The hex ID for the timber material.</summary>
         public string TimberMID { get; set; } = "448DDF23";
+        /// <summary>The hex ID for the coal material.</summary>
         public string CoalMID { get; set; } = "6ACBCBA9";
+        /// <summary>The hex ID for the iron ore material.</summary>
         public string IronOreMID { get; set; } = "61A13BCE";
+        /// <summary>The hex ID for the crude oil material.</summary>
         public string CrudeOilMID { get; set; } = "19CFBDA7";
+        /// <summary>The hex ID for the sand material.</summary>
         public string SandMID { get; set; } = "94032E35";
+        /// <summary>The hex ID for the iron material.</summary>
         public string IronMID { get; set; } = "7C13D1C9";
+        /// <summary>The hex ID for the goods material.</summary>
         public string GoodsMID { get; set; } = "B388ED8C";
+        /// <summary>The hex ID for the food material.</summary>
         public string FoodMID { get; set; } = "C74198A7";
+        /// <summary>The hex ID for the diesel material.</summary>
         public string DieselMID { get; set; } = "53F1B093";
+        /// <summary>The hex ID for the steel material.</summary>
         public string SteelMID { get; set; } = "88D1A491";
+        /// <summary>The hex ID for the passengers material.</summary>
         public string PassengersMID { get; set; } = "0BA458C8";
+        /// <summary>The hex ID for the mail material.</summary>
         public string MailMID { get; set; } = "0F822763";
+        /// <summary>The hex ID for the limestone material.</summary>
         public string LimestoneMID { get; set; } = "762F8F3E";
+        /// <summary>The hex ID for the cement material.</summary>
         public string CementMID { get; set; } = "8DFA75B5";
+        /// <summary>The hex ID for the garbage material.</summary>
         public string GarbageMID { get; set; } = "9A988702";
+        /// <summary>The hex ID for the second reserve material.</summary>
         public string Reserve2MID { get; set; } = "";
+
+        /// <summary>The path to the cargo icons image file.</summary>
         public string CargoIconsPath { get; set; } = "/media/map/gui/cargo_basic_set.png";
+        /// <summary>The wiki link for pollution information.</summary>
         public string LinkPollution { get; set; } = "City Upgrades#Pollution";
+        /// <summary>The electrification token for power systems.</summary>
         public Token Electrification { get; private set; }
+        /// <summary>The hex ID for the electrification token.</summary>
         public string ElectrificationTID { get; set; } = "CE900010";
+        /// <summary>The wiki link for game tick information.</summary>
         public string LinkTick { get; set; } = "Game_tick";
+        /// <summary>The wiki link for operating costs information.</summary>
         public string LinkOperatingCost { get; set; } = "Operating_Costs";
 
 
