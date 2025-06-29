@@ -1,20 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Imaging;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Media.Imaging;
 
 namespace MashinkyWikiGen
 {
+    /// <summary>
+    /// Reads and extracts icons from Mashinky game sprite sheets.
+    /// Manages cached bitmap resources for wagons, vehicles, and planes to improve performance.
+    /// </summary>
     class ImageReader
     {
+        /// <summary>
+        /// The cached bitmap for the wagon sprite sheet.
+        /// </summary>
         private Bitmap wagonsSet;
+        
+        /// <summary>
+        /// The cached bitmap for the vehicle sprite sheet.
+        /// </summary>
         private Bitmap vehicleSet;
+        
+        /// <summary>
+        /// The cached bitmap for the airplane sprite sheet.
+        /// </summary>
         private Bitmap planesSet;
+        
+        /// <summary>
+        /// Initializes a new instance of the ImageReader class.
+        /// Loads and caches the main sprite sheets for efficient icon extraction.
+        /// </summary>
+        /// <param name="gameFolderPath">The path to the Mashinky game folder</param>
         public ImageReader(string gameFolderPath)
         {
             wagonsSet = Image.FromFile(gameFolderPath + "\\media\\map\\gui\\wagons_basic_set.png") as Bitmap;
@@ -22,6 +36,11 @@ namespace MashinkyWikiGen
             planesSet = Image.FromFile(gameFolderPath + "\\media\\map\\gui\\planes_basic_set.png") as Bitmap;
         }
 
+        /// <summary>
+        /// Creates a blank crimson-colored image for use as a placeholder.
+        /// Used when an icon cannot be found or loaded properly.
+        /// </summary>
+        /// <returns>A 10x10 crimson-colored bitmap</returns>
         public Bitmap CreateBlankImage()
         {
             Bitmap image = new Bitmap(10, 10);
@@ -37,6 +56,13 @@ namespace MashinkyWikiGen
             return image;
         }
 
+        /// <summary>
+        /// Extracts an icon from a sprite sheet using the specified coordinates.
+        /// Uses cached bitmaps for common sprite sheets to improve performance.
+        /// </summary>
+        /// <param name="iconSource">The path to the source image file</param>
+        /// <param name="coords">An array containing [x, y, width, height] coordinates for extraction</param>
+        /// <returns>A cropped bitmap containing the requested icon</returns>
         public Bitmap ReadIcon(string iconSource, int[] coords)
         {
             Bitmap source;

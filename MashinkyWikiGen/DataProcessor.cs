@@ -1,28 +1,85 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
-using System.Drawing;
 using System.Drawing.Imaging;
 
 namespace MashinkyWikiGen
 {
+    /// <summary>
+    /// Processes parsed game data and generates organized wiki resources with icons and tables.
+    /// Handles creation of folder structures, icon extraction, and wiki table generation for all game entities.
+    /// </summary>
     class DataProcessor
     {
+        /// <summary>
+        /// The list of wagon vehicles to process.
+        /// </summary>
         private List<VehicleBase> wagons;
+        
+        /// <summary>
+        /// The list of engine vehicles to process.
+        /// </summary>
         private List<VehicleBase> engines;
+        
+        /// <summary>
+        /// The list of car vehicles to process.
+        /// </summary>
         private List<VehicleBase> cars;
+        
+        /// <summary>
+        /// The list of airplane vehicles to process.
+        /// </summary>
         private List<VehicleBase> airplanes;
+        
+        /// <summary>
+        /// The list of token resources to process.
+        /// </summary>
         private List<Token> tokens;
+        
+        /// <summary>
+        /// The list of material resources to process.
+        /// </summary>
         private List<Token> materials;
+        
+        /// <summary>
+        /// The list of buildings to process.
+        /// </summary>
         private List<Building> buildings;
+        
+        /// <summary>
+        /// The list of town upgrades to process.
+        /// </summary>
         List<BuildingUpgrade> townUpgrades;
+        
+        /// <summary>
+        /// The output folder path where all generated wiki resources are saved.
+        /// </summary>
         public string dataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\MashWikiGen";
+        
+        /// <summary>
+        /// The wiki script generator used to create MediaWiki-formatted tables.
+        /// </summary>
         private WikiScriptGen WSGen;
+        
+        /// <summary>
+        /// The list of icon resources to process.
+        /// </summary>
         private List<Token> icons;
 
+        /// <summary>
+        /// Initializes a new instance of the DataProcessor class.
+        /// </summary>
+        /// <param name="airplanes">The list of airplane vehicles to process</param>
+        /// <param name="wagons">The list of wagon vehicles to process</param>
+        /// <param name="engines">The list of engine vehicles to process</param>
+        /// <param name="cars">The list of car vehicles to process</param>
+        /// <param name="tokens">The list of token resources to process</param>
+        /// <param name="materials">The list of material resources to process</param>
+        /// <param name="buildings">The list of buildings to process</param>
+        /// <param name="townUpgrades">The list of town upgrades to process</param>
+        /// <param name="resources">The resources manager for wiki generation</param>
+        /// <param name="icons">The list of icon resources to process</param>
         public DataProcessor(List<VehicleBase> airplanes, List<VehicleBase> wagons, List<VehicleBase> engines, List<VehicleBase> cars, List<Token> tokens, List<Token> materials, List<Building> buildings, List<BuildingUpgrade> townUpgrades ,Resources resources, List<Token> icons)
         {
             this.wagons = wagons;
@@ -37,6 +94,10 @@ namespace MashinkyWikiGen
             WSGen = new WikiScriptGen(resources);
         }
 
+        /// <summary>
+        /// Generates and saves all token and icon images to their respective folders.
+        /// Creates /Tokens/ and /Icons/ folders and saves PNG files for each resource.
+        /// </summary>
         public void GenerateTokens()
         {
             string path = dataFolder + "/Tokens/";
@@ -63,6 +124,10 @@ namespace MashinkyWikiGen
 
         }
 
+        /// <summary>
+        /// Generates and saves all material icon images to the Materials folder.
+        /// Creates /Materials/ folder and saves PNG files for each material resource.
+        /// </summary>
         public void GenerateMaterials()
         {
             string path = dataFolder + "/Materials/";
@@ -81,6 +146,10 @@ namespace MashinkyWikiGen
             }
         }
 
+        /// <summary>
+        /// Generates wagon wiki resources organized by cargo type.
+        /// Creates individual folders for each wagon with icons and parameter tables.
+        /// </summary>
         public void GenerateWagons()
         {
             string path = dataFolder + "/Wagons/";
@@ -104,6 +173,10 @@ namespace MashinkyWikiGen
             }
         }
 
+        /// <summary>
+        /// Generates engine wiki resources organized by epoch.
+        /// Creates individual folders for each engine with icons and parameter tables.
+        /// </summary>
         public void GenerateEngines()
         {
             string path = dataFolder + "/Engines/";
@@ -129,6 +202,10 @@ namespace MashinkyWikiGen
             }
         }
 
+        /// <summary>
+        /// Generates car wiki resources organized by cargo type.
+        /// Creates individual folders for each car with icons and parameter tables.
+        /// </summary>
         public void GenerateCars()
         {
             string path = dataFolder + "/Cars/";
@@ -150,6 +227,10 @@ namespace MashinkyWikiGen
             }
         }
 
+        /// <summary>
+        /// Generates airplane wiki resources organized by epoch and cargo type.
+        /// Creates individual folders for each airplane with icons and parameter tables.
+        /// </summary>
         public void GenerateAirplanes()
         {
             string path = dataFolder + "/Airplanes/";
@@ -172,6 +253,10 @@ namespace MashinkyWikiGen
             }
         }
 
+        /// <summary>
+        /// Generates building wiki resources organized by type.
+        /// Creates folders for industry buildings, town extensions, and decorations with icons.
+        /// </summary>
         public void GenerateBuildings()
         {
             string path = dataFolder + "/Buildings/";
@@ -197,6 +282,12 @@ namespace MashinkyWikiGen
             }
         }
 
+        /// <summary>
+        /// Generates vehicle tables organized by epoch (time period).
+        /// Creates folders for each epoch (0-7) with corresponding vehicle tables.
+        /// </summary>
+        /// <param name="wagons">The list of vehicles to organize by epoch</param>
+        /// <param name="path">The base path where epoch folders will be created</param>
         public void GenerateTableByEpoch(List<VehicleBase> wagons, string path)
         {
             for (int i = 0; i < 8; i++)
@@ -207,6 +298,12 @@ namespace MashinkyWikiGen
             }
         }
 
+        /// <summary>
+        /// Generates vehicle tables organized by cargo type.
+        /// Creates folders for each cargo type with corresponding vehicle tables.
+        /// </summary>
+        /// <param name="wagons">The list of vehicles to organize by cargo type</param>
+        /// <param name="path">The base path where cargo folders will be created</param>
         public void GenerateTableByCargo(List<VehicleBase> wagons, string path)
         {
             List<string> cargos = (from w in wagons orderby w.Cargo.Name select w.Cargo.Name).Distinct().ToList();
@@ -219,6 +316,13 @@ namespace MashinkyWikiGen
         }
 
 
+        /// <summary>
+        /// Generates building tables organized by building type.
+        /// Creates folders for industrial buildings, town extensions (relax/amenities/luxury), and decorations.
+        /// </summary>
+        /// <param name="townUpgrades">The list of town upgrades to organize</param>
+        /// <param name="buildings">The list of buildings to organize</param>
+        /// <param name="path">The base path where type folders will be created</param>
         public void GenerateBTableByType(List<BuildingUpgrade> townUpgrades, List<Building> buildings, string path)
         {
             foreach (Building b in buildings)
@@ -257,6 +361,12 @@ namespace MashinkyWikiGen
             }
         }
 
+        /// <summary>
+        /// Generates town extension tables organized by bonus type.
+        /// Creates separate tables for relax, amenities, and luxury town extensions.
+        /// </summary>
+        /// <param name="ext">The list of town extensions to organize</param>
+        /// <param name="path">The base path where extension tables will be created</param>
         public void GenerateTETableByType(List<TownExtension> ext, string path)
         {
             string ePath = path + "Town extensions/";
