@@ -10,3 +10,7 @@ Run `MashinkyWikiGen.exe` in Mashinky main folder (where `Mashinky.exe` is locat
 
 ### GUI explanation
 TODO
+
+## Requirements
+- Windows operating system
+- .NET Framework (included with the executable)
